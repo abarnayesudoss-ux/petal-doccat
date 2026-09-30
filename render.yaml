@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: petal-docchat
+    runtime: python
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: gunicorn backend.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --workers 1 --timeout 180
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      # The ONLY secret. Render asks you to type its value when you create the service.
+      - key: GEMINI_API_KEY
+        sync: false
